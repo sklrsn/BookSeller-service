@@ -8,14 +8,28 @@
 	<name>rest-instant-payments Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		
+
+		<!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-core -->
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>2.2.11</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.sun.jersey/jersey-servlet -->
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
+			<version>1.19.2</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/stax/stax-api -->
 		<dependency>
 			<groupId>stax</groupId>
@@ -110,5 +124,15 @@
 	</dependencies>
 	<build>
 		<finalName>rest-instant-payments</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 </project>
