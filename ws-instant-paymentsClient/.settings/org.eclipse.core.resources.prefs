@@ -1,0 +1,7 @@
+eclipse.preferences.version=1
+encoding//src/com/ws/service/instantpayment/InstantPaymentServiceImpl.java=UTF-8
+encoding//src/com/ws/service/instantpayment/InstantPaymentServiceImplService.java=UTF-8
+encoding//src/com/ws/service/instantpayment/InstantPaymentServiceImplServiceLocator.java=UTF-8
+encoding//src/com/ws/service/instantpayment/InstantPaymentServiceImplSoapBindingStub.java=UTF-8
+encoding//src/com/ws/service/instantpayment/request/MakePaymentRequest.java=UTF-8
+encoding//src/com/ws/service/instantpayment/response/MakePaymentResponse.java=UTF-8

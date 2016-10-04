@@ -1,0 +1,47 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from InstantPaymentServiceImplService WSDL service -->
+
+  <service name="InstantPaymentServiceImpl" provider="java:RPC" style="wrapped" use="literal">
+      <parameter name="wsdlTargetNamespace" value="http://instantpayment.service.ws.com"/>
+      <parameter name="wsdlServiceElement" value="InstantPaymentServiceImplService"/>
+      <parameter name="schemaQualified" value="http://instantpayment.service.ws.com,http://response.instantpayment.service.ws.com,http://request.instantpayment.service.ws.com"/>
+      <parameter name="wsdlServicePort" value="InstantPaymentServiceImpl"/>
+      <parameter name="className" value="com.ws.service.instantpayment.InstantPaymentServiceImplSoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="InstantPaymentServiceImpl"/>
+      <parameter name="typeMappingVersion" value="1.2"/>
+      <operation name="isRunning" qname="operNS:isRunning" xmlns:operNS="http://instantpayment.service.ws.com" returnQName="retNS:isRunningReturn" xmlns:retNS="http://instantpayment.service.ws.com" returnType="rtns:boolean" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+      </operation>
+      <operation name="processPayment" qname="operNS:processPayment" xmlns:operNS="http://instantpayment.service.ws.com" returnQName="retNS:processPaymentReturn" xmlns:retNS="http://instantpayment.service.ws.com" returnType="rtns:MakePaymentResponse" xmlns:rtns="http://response.instantpayment.service.ws.com" soapAction="" >
+        <parameter qname="pns:makePaymentRequest" xmlns:pns="http://instantpayment.service.ws.com" type="tns:MakePaymentRequest" xmlns:tns="http://request.instantpayment.service.ws.com"/>
+      </operation>
+      <parameter name="allowedMethods" value="isRunning processPayment"/>
+
+      <typeMapping
+        xmlns:ns="http://response.instantpayment.service.ws.com"
+        qname="ns:MakePaymentResponse"
+        type="java:com.ws.service.instantpayment.response.MakePaymentResponse"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+      <typeMapping
+        xmlns:ns="http://request.instantpayment.service.ws.com"
+        qname="ns:MakePaymentRequest"
+        type="java:com.ws.service.instantpayment.request.MakePaymentRequest"
+        serializer="org.apache.axis.encoding.ser.BeanSerializerFactory"
+        deserializer="org.apache.axis.encoding.ser.BeanDeserializerFactory"
+        encodingStyle=""
+      />
+  </service>
+</deployment>
