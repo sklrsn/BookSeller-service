@@ -20,7 +20,7 @@ public class InstantPaymentService {
 		return Response.status(Status.OK).entity("Service is up and running").build();
 	}
 
-	@Path("/MakePayment/")
+	@Path("/MakePayment")
 	@POST
 	@Produces(MediaType.APPLICATION_XML)
 	@Consumes(MediaType.APPLICATION_XML)
