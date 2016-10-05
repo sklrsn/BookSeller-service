@@ -6,6 +6,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.http.HttpResponse;
 
+import com.rest.service.instapayment.marshalling.JAXBMarshaller;
 import com.service.instantpayments.utils.Utils;
 import com.sun.jersey.api.client.ClientResponse;
 
@@ -18,7 +19,8 @@ public class InstantPaymentServiceClient {
 		LOGGER.info(clientResponse.getEntity(String.class));
 
 		try {
-			HttpResponse response = Utils.InvokePostService(PAYMENT_SERVICE, "/MakePayment");
+			HttpResponse response = Utils.InvokePostService(PAYMENT_SERVICE, "/MakePayment",
+					JAXBMarshaller.buildMakePaymentRequest(), MediaType.APPLICATION_XML);
 			LOGGER.info("Status:" + response.getStatusLine().getStatusCode());
 		} catch (Exception e) {
 			e.printStackTrace();

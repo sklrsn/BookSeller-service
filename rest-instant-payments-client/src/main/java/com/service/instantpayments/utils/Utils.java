@@ -1,6 +1,8 @@
 package com.service.instantpayments.utils;
 
-import javax.ws.rs.core.MediaType;
+import java.io.UnsupportedEncodingException;
+
+import javax.xml.bind.JAXBException;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -8,7 +10,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import com.rest.service.instapayment.marshalling.JAXBMarshaller;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -31,14 +32,20 @@ public class Utils {
 		return webResource;
 	}
 
-	public static HttpResponse InvokePostService(String resource, String serviceName) throws Exception {
+	public static HttpResponse InvokePostService(String resource, String serviceName, String request, String mediaType)
+			throws Exception {
 		HttpClient httpClient = HttpClientBuilder.create().build();
-		HttpPost postRequest = new HttpPost(resource + serviceName);
-		StringEntity input = null;
-		input = new StringEntity(JAXBMarshaller.buildMakePaymentRequest());
-		input.setContentType(MediaType.APPLICATION_XML);
-		postRequest.setEntity(input);
+		HttpPost postRequest = buildPostRequest(resource, serviceName, request, mediaType);
 		HttpResponse response = httpClient.execute(postRequest);
 		return response;
+	}
+
+	private static HttpPost buildPostRequest(String resource, String serviceName, String request, String mediaType)
+			throws UnsupportedEncodingException, JAXBException {
+		HttpPost postRequest = new HttpPost(resource + serviceName);
+		StringEntity input = new StringEntity(request);
+		input.setContentType(mediaType);
+		postRequest.setEntity(input);
+		return postRequest;
 	}
 }
