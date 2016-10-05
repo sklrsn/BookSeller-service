@@ -9,7 +9,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.rest.service.instantpayment.request.MakePaymentRequest;
 import com.rest.service.instantpayment.response.MakePaymentResponse;
+
+import junit.framework.Assert;
 
 @Path("/InstantPaymentService")
 public class InstantPaymentService {
@@ -24,10 +27,10 @@ public class InstantPaymentService {
 	@POST
 	@Produces(MediaType.APPLICATION_XML)
 	@Consumes(MediaType.APPLICATION_XML)
-	public Response processPayment() {
+	public Response processPayment(MakePaymentRequest makePaymentRequest) {
+		Assert.assertNull(makePaymentRequest);
 		MakePaymentResponse makePaymentResponse = new MakePaymentResponse();
 		makePaymentResponse.setIsProcessed(Boolean.TRUE);
 		return Response.status(Status.OK).entity(makePaymentResponse).build();
-
 	}
 }
