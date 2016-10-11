@@ -6,8 +6,11 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.http.client.ClientProtocolException;
 
+import com.service.rest.goodreads.response.GoodreadsBooksCatalogueResponse;
+
 public interface GoodreadsInfoRetrievalService {
 
-	void retrievebooks(String keyword) throws ClientProtocolException, IOException, JAXBException;
+	GoodreadsBooksCatalogueResponse retrievebooks(String keyword)
+			throws ClientProtocolException, IOException, JAXBException;
 
 }

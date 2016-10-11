@@ -1,8 +1,6 @@
 package com.service.rest.goodreads.retrieve;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import javax.xml.bind.JAXBException;
@@ -24,27 +22,17 @@ public class GoodreadsInfoRetrievalServiceImpl implements GoodreadsInfoRetrieval
 	private static final String BASE_URL = "https://www.goodreads.com/search.xml?";
 	// https://www.goodreads.com/search.xml?key=YOUR_KEY&q=Ender%27s+Game
 
-	public void retrievebooks(String keyword) throws ClientProtocolException, IOException, JAXBException {
-		HttpResponse httpResponse = getBooks(keyword);
-		System.out.println("#############" + httpResponse.getStatusLine().getStatusCode());
-
+	public GoodreadsBooksCatalogueResponse retrievebooks(String keyword)
+			throws ClientProtocolException, IOException, JAXBException {
+		return getBooks(keyword);
 	}
 
-	private HttpResponse getBooks(String keyword) throws ClientProtocolException, IOException, JAXBException {
+	private GoodreadsBooksCatalogueResponse getBooks(String keyword)
+			throws ClientProtocolException, IOException, JAXBException {
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpGet httpGetrequest = buildGetRequest(keyword);
 		HttpResponse httpResponse = httpClient.execute(httpGetrequest);
-		
-		//System.out.println(httpResponse.getStatusLine().getStatusCode());
-		// BufferedReader bufferedReader = new BufferedReader(
-		// new InputStreamReader(httpResponse.getEntity().getContent()));
-		// String read;
-		// while ((read = bufferedReader.readLine()) != null) {
-		// System.out.println(read);
-		// }
-		GoodreadsBooksCatalogueResponse booksCatalogueResponse = UnMarshallRetrievedBooksCatalogue
-				.unMarshallBooksCatalogue(httpResponse.getEntity().getContent());
-		return httpResponse;
+		return UnMarshallRetrievedBooksCatalogue.unMarshallBooksCatalogue(httpResponse.getEntity().getContent());
 	}
 
 	private static String buildResourceUrl(String keyword) {
