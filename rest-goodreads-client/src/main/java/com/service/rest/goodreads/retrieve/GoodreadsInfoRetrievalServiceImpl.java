@@ -3,9 +3,7 @@ package com.service.rest.goodreads.retrieve;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -22,54 +20,58 @@ public class GoodreadsInfoRetrievalServiceImpl implements GoodreadsInfoRetrieval
 	private static final String HEADER_NAME = "accept";
 	private static final String KEY = "uv1J3LcJ7zGuhzCXwaCcUQ";
 	private static final String AUTH_CODE = "QT7rbUZI5usLKYL24i5H1KrNJYN52cBpGRbPHNaVI";
-	private static final String BASE_URL = "https://www.goodreads.com/search.xml?";
+	private static final String BASE_URL = "https://www.goodreads.com/";
 	// https://www.goodreads.com/search.xml?key=YOUR_KEY&q=Ender%27s+Game
 	// https://www.goodreads.com/book/show/17050695.xml?key=uv1J3LcJ7zGuhzCXwaCcUQ
 
-	public GoodreadsBooksCatalogueResponse retrieveBooks(String keyword)
+	public GoodreadsBooksCatalogueResponse retrieveBooksbyKeyword(String keyword)
 			throws ClientProtocolException, IOException, JAXBException {
 		return getBooks(keyword);
 	}
 
 	private GoodreadsBooksCatalogueResponse getBooks(String keyword)
 			throws ClientProtocolException, IOException, JAXBException {
-		HttpClient httpClient = HttpClientBuilder.create().build();
-		HttpGet httpGetrequest = buildRetrieveCatalogueRequest(keyword);
+		HttpClient httpClient = getHttpClientInstance();
+		HttpGet httpGetrequest = buildHttpGetRequest(buildResourceCatalogueUrl(keyword));
 		HttpResponse httpResponse = httpClient.execute(httpGetrequest);
 		return UnMarshallRetrievedBooksCatalogue.unMarshallBooksCatalogue(httpResponse.getEntity().getContent());
 	}
 
+	public GoodreadsRetrieveISBNResponse retrieveBookbyId(String bookId)
+			throws ClientProtocolException, IOException, UnsupportedOperationException, JAXBException {
+		HttpClient httpClient = getHttpClientInstance();
+		HttpGet getRequest = buildHttpGetRequest(buildISBNretrievalUrl(bookId));
+		HttpResponse httpResponse = httpClient.execute(getRequest);
+		return UnMarshallRetrievedBooksCatalogue.unMarshallISBNstream(httpResponse.getEntity().getContent());
+	}
+
+	private HttpClient getHttpClientInstance() {
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		return httpClient;
+	}
+
 	private static String buildResourceCatalogueUrl(String keyword) {
-		return BASE_URL + "key=" + KEY + "&q=" + keyword;
+		return BASE_URL + "search.xml?key=" + KEY + "&q=" + keyword;
 
 	}
 
-	private static HttpGet buildRetrieveCatalogueRequest(String keyword)
-			throws UnsupportedEncodingException, JAXBException {
-		HttpGet getRequest = new HttpGet(buildResourceCatalogueUrl(keyword));
+	private static String buildISBNretrievalUrl(String bookId) {
+		return BASE_URL + "book/show/" + bookId + ".xml" + "?key=" + KEY;
+
+	}
+
+	private static HttpGet buildHttpGetRequest(String resourceUrl) throws UnsupportedEncodingException, JAXBException {
+		HttpGet getRequest = new HttpGet(resourceUrl);
 		getRequest.addHeader(HEADER_NAME, HEADER_VALUE);
 		return getRequest;
 	}
 
-	public void checkcode() throws ClientProtocolException, IOException, UnsupportedOperationException, JAXBException {
-		HttpClient httpClient = HttpClientBuilder.create().build();
-		HttpGet getRequest = new HttpGet("https://www.goodreads.com/book/show/12082688.xml?key=uv1J3LcJ7zGuhzCXwaCcUQ");
-		getRequest.addHeader(HEADER_NAME, HEADER_VALUE);
-		HttpResponse httpResponse = httpClient.execute(getRequest);
-		JAXBContext jaxbContext = JAXBContext.newInstance(GoodreadsRetrieveISBNResponse.class);
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		GoodreadsRetrieveISBNResponse booksCatalogueResponse = (GoodreadsRetrieveISBNResponse) unmarshaller
-				.unmarshal(httpResponse.getEntity().getContent());
-		System.out.println(booksCatalogueResponse.getArtifact().getId());
-		System.out.println(booksCatalogueResponse.getArtifact().getIsbn());
-		System.out.println(booksCatalogueResponse.getArtifact().getIsbn13());
-	}
-
 	public static void main(String[] args) {
 		try {
-			System.out
-					.println(new GoodreadsInfoRetrievalServiceImpl().getBooks("Ender%27s+Game").getRequest().getKey());
-			new GoodreadsInfoRetrievalServiceImpl().checkcode();
+			System.out.println(new GoodreadsInfoRetrievalServiceImpl().getBooks("Ender%27s+Game").getSearch()
+					.getResults().getResultList().get(0).getId());
+			System.out.println(
+					new GoodreadsInfoRetrievalServiceImpl().retrieveBookbyId("17050695").getArtifact().getIsbn13());
 
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();

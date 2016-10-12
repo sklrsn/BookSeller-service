@@ -7,10 +7,14 @@ import javax.xml.bind.JAXBException;
 import org.apache.http.client.ClientProtocolException;
 
 import com.service.rest.goodreads.response.GoodreadsBooksCatalogueResponse;
+import com.service.rest.goodreads.response.GoodreadsRetrieveISBNResponse;
 
 public interface GoodreadsInfoRetrievalService {
 
-	GoodreadsBooksCatalogueResponse retrieveBooks(String keyword)
+	GoodreadsBooksCatalogueResponse retrieveBooksbyKeyword(String keyword)
 			throws ClientProtocolException, IOException, JAXBException;
+
+	GoodreadsRetrieveISBNResponse retrieveBookbyId(String bookId)
+			throws ClientProtocolException, IOException, UnsupportedOperationException, JAXBException;
 
 }

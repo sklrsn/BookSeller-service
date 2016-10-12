@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "work")
 public class Work {
-	private int id;
+	private String id;
 	private int booksCount;
 	private int ratingsCount;
 	private int textReviewsCount;
@@ -15,12 +15,12 @@ public class Work {
 	private String averageRating;
 	private Book book;
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
 	@XmlElement(name = "id")
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
