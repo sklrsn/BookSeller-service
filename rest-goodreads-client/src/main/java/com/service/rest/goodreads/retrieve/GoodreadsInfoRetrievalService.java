@@ -10,7 +10,7 @@ import com.service.rest.goodreads.response.GoodreadsBooksCatalogueResponse;
 
 public interface GoodreadsInfoRetrievalService {
 
-	GoodreadsBooksCatalogueResponse retrievebooks(String keyword)
+	GoodreadsBooksCatalogueResponse retrieveBooks(String keyword)
 			throws ClientProtocolException, IOException, JAXBException;
 
 }
