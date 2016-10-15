@@ -79,7 +79,7 @@ public class ParsingTest {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(FindItemsByKeywordsResponse.class).createUnmarshaller();
 		FindItemsByKeywordsResponse findItemsByKeywordsResponse = (FindItemsByKeywordsResponse) unmarshaller
 				.unmarshal(soapResponse.getSOAPBody().extractContentAsDocument());
-		System.out.println(findItemsByKeywordsResponse);
+		System.out.println(findItemsByKeywordsResponse.getAck());
 
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
