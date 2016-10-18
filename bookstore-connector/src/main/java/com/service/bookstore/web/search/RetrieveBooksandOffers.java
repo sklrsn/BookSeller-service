@@ -11,7 +11,7 @@ import javax.xml.soap.SOAPException;
 import org.apache.http.client.ClientProtocolException;
 
 import com.service.bookstore.response.Article;
-import com.service.bookstore.response.FindItemsByKeywordsResponse;
+import com.service.bookstore.response.FindItemsByCategoryResponse;
 import com.service.bookstore.response.Item;
 import com.service.rest.goodreads.response.GoodreadsBooksCatalogueResponse;
 import com.service.rest.goodreads.response.Work;
@@ -21,8 +21,8 @@ import com.services.ebay.offers.retrieval.EbayOffersInfoRetrievalService;
 import com.services.ebay.offers.retrieval.EbayOffersInfoRetrievalServiceImpl;
 
 public class RetrieveBooksandOffers {
-	private GoodreadsInfoRetrievalService goodreadsInfoRetrievalService = new GoodreadsInfoRetrievalServiceImpl();
-	private EbayOffersInfoRetrievalService ebayOffersInfoRetrievalService = new EbayOffersInfoRetrievalServiceImpl();
+	private static final GoodreadsInfoRetrievalService goodreadsInfoRetrievalService = new GoodreadsInfoRetrievalServiceImpl();
+	private static final EbayOffersInfoRetrievalService ebayOffersInfoRetrievalService = new EbayOffersInfoRetrievalServiceImpl();
 
 	public List<Article> listbooksAndOffers(String keyword) {
 		GoodreadsBooksCatalogueResponse booksCatalogueResponse = null;
@@ -41,7 +41,6 @@ public class RetrieveBooksandOffers {
 				article.setAuthors(work.getBook().getAuthor().getName());
 				articles.add(article);
 			}
-
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -52,9 +51,9 @@ public class RetrieveBooksandOffers {
 			e.printStackTrace();
 		}
 
-		FindItemsByKeywordsResponse findItemsByKeywordsResponse = null;
+		FindItemsByCategoryResponse findItemsByCategoryResponse = null;
 		try {
-			findItemsByKeywordsResponse = ebayOffersInfoRetrievalService.retriveOffers(keyword);
+			findItemsByCategoryResponse = ebayOffersInfoRetrievalService.retriveOffersByCategory(keyword);
 		} catch (SOAPException e) {
 			e.printStackTrace();
 		} catch (JAXBException e) {
@@ -62,17 +61,27 @@ public class RetrieveBooksandOffers {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		for (Item item : findItemsByKeywordsResponse.getSearchResult().getItems()) {
-			System.out.println(item.getPrimaryCategory().getCategoryName());
-			System.out.println();
+		for (Item item : findItemsByCategoryResponse.getSearchResult().getItems()) {
+			for (Article article : articles) {
+				if (article.getTitle().replaceAll("\\s", "")
+						.contains(item.getTitle().replaceAll("\\.", " ").replaceAll("\\s", ""))) {
+					article.setCurrentPrice(item.getSellingStatus().getCurrentPrice());
+					article.setIsAvailableForPurchase(item.getSellingStatus().getSellingState());
+					article.setShippingServiceCost(item.getShippingInfo().getShippingServiceCost());
+					article.setEbayUrl(item.getViewItemURL());
+				}
+			}
 		}
-		System.out.println(findItemsByKeywordsResponse.getAck());
-		// return articles;
-		return null;
+		return articles;
 	}
 
 	public static void main(String[] args) {
-		new RetrieveBooksandOffers().listbooksAndOffers("Secrets of Mental Math");
+		List<Article> articles = new RetrieveBooksandOffers().listbooksAndOffers("Secrets of Mental Math");
+		for (Article article : articles) {
+			System.out.println(article.getTitle());
+			System.out.println(article.getEbayUrl());
+			System.out.println("##########");
+		}
 
 	}
 

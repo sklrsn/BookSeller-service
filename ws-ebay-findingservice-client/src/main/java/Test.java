@@ -10,7 +10,7 @@ public class Test {
 		EbayOffersInfoRetrievalService ebayOffersInfoRetrievalService = new EbayOffersInfoRetrievalServiceImpl();
 		try {
 			FindItemsByKeywordsResponse findItemsByKeywordsResponse = ebayOffersInfoRetrievalService
-					.retriveOffers("harry potter phoenix");
+					.retriveOffersByKeywords("harry potter phoenix");
 			System.out.println(findItemsByKeywordsResponse.getAck());
 		} catch (SOAPException e) {
 			e.printStackTrace();

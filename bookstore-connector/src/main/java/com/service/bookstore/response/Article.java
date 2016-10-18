@@ -6,7 +6,6 @@ public class Article {
 	private String title;
 	private String imageUrl;
 	private String publicationYear;
-	private String publisher;
 	private String averageRating;
 	private String ratingsCount;
 	private String author;
@@ -47,14 +46,6 @@ public class Article {
 
 	public void setPublicationYear(String publicationYear) {
 		this.publicationYear = publicationYear;
-	}
-
-	public String getPublisher() {
-		return publisher;
-	}
-
-	public void setPublisher(String publisher) {
-		this.publisher = publisher;
 	}
 
 	public String getAverageRating() {

@@ -14,6 +14,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
+import com.service.bookstore.response.FindItemsByCategoryResponse;
 import com.service.bookstore.response.FindItemsByKeywordsResponse;
 
 public class EbayOffersInfoRetrievalServiceImpl implements EbayOffersInfoRetrievalService {
@@ -31,15 +32,15 @@ public class EbayOffersInfoRetrievalServiceImpl implements EbayOffersInfoRetriev
 	private static final String SERVICE_VERSION = "1.0.0";
 	private static final String OPERATION_NAME = "findItemsByKeywords";
 
-	public FindItemsByKeywordsResponse retriveOffers(String title) throws SOAPException, JAXBException {
+	public FindItemsByKeywordsResponse retriveOffersByKeywords(String title) throws SOAPException, JAXBException {
 		SOAPConnection soapConnection = createSOAPConnection();
-		SOAPMessage soapResponse = soapConnection.call(buildSOAPRequest(title), SERVICE_URL);
-		FindItemsByKeywordsResponse findItemsByKeywordsResponse = parseSOAPResponse(soapResponse);
+		SOAPMessage soapResponse = soapConnection.call(buildRetrieveByKeywordsRequest(title), SERVICE_URL);
+		FindItemsByKeywordsResponse findItemsByKeywordsResponse = parseRetrieveByKeywordsResponse(soapResponse);
 		closeConection(soapConnection);
 		return findItemsByKeywordsResponse;
 	}
 
-	private static SOAPMessage buildSOAPRequest(String title) throws SOAPException {
+	private static SOAPMessage buildRetrieveByKeywordsRequest(String title) throws SOAPException {
 		MessageFactory messageFactory = MessageFactory.newInstance();
 		SOAPMessage soapMessage = messageFactory.createMessage();
 		SOAPPart soapPart = soapMessage.getSOAPPart();
@@ -66,7 +67,7 @@ public class EbayOffersInfoRetrievalServiceImpl implements EbayOffersInfoRetriev
 		return soapMessage;
 	}
 
-	private FindItemsByKeywordsResponse parseSOAPResponse(SOAPMessage soapResponse)
+	private FindItemsByKeywordsResponse parseRetrieveByKeywordsResponse(SOAPMessage soapResponse)
 			throws JAXBException, SOAPException {
 		Unmarshaller unmarshaller = JAXBContext.newInstance(FindItemsByKeywordsResponse.class).createUnmarshaller();
 		return (FindItemsByKeywordsResponse) unmarshaller
@@ -80,6 +81,50 @@ public class EbayOffersInfoRetrievalServiceImpl implements EbayOffersInfoRetriev
 	private SOAPConnection createSOAPConnection() throws SOAPException {
 		SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
 		return soapConnectionFactory.createConnection();
+	}
+
+	public FindItemsByCategoryResponse retriveOffersByCategory(String keyword) throws SOAPException, JAXBException {
+		SOAPConnection soapConnection = createSOAPConnection();
+		SOAPMessage soapResponse = soapConnection.call(buildRetrieveByCategoryRequest(keyword), SERVICE_URL);
+		FindItemsByCategoryResponse findItemsByCategoryResponse = parseRetrieveByCategoryResponse(soapResponse);
+		closeConection(soapConnection);
+		return findItemsByCategoryResponse;
+	}
+
+	private static SOAPMessage buildRetrieveByCategoryRequest(String keyword) throws SOAPException {
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage soapMessage = messageFactory.createMessage();
+		SOAPPart soapPart = soapMessage.getSOAPPart();
+
+		// SOAP Envelope
+		SOAPEnvelope envelope = soapPart.getEnvelope();
+		envelope.addNamespaceDeclaration("xmlns", NAMESPACE);
+
+		// SOAP Body
+		SOAPBody soapBody = envelope.getBody();
+		SOAPElement soapBodyElem = soapBody.addChildElement("findItemsAdvancedRequest", "");
+		SOAPElement soapBodyElem1 = soapBodyElem.addChildElement("keywords", "");
+		soapBodyElem1.addTextNode(keyword);
+		SOAPElement soapBodyElem2 = soapBodyElem.addChildElement("categoryId", "");
+		soapBodyElem2.addTextNode("267");
+
+		MimeHeaders headers = soapMessage.getMimeHeaders();
+		headers.addHeader(X_EBAY_SOA_OPERATION_NAME, "findItemsAdvanced");
+		headers.addHeader(X_EBAY_SOA_SERVICE_VERSION, SERVICE_VERSION);
+		headers.addHeader(X_EBAY_SOA_SECURITY_APPNAME, SECURITY_APPNAME);
+		headers.addHeader(RESPONSE_DATA_FORMAT, DATA_FORMAT);
+		headers.addHeader(X_EBAY_SOA_MESSAGE_PROTOCOL, SOAP12);
+
+		soapMessage.saveChanges();
+
+		return soapMessage;
+	}
+
+	private FindItemsByCategoryResponse parseRetrieveByCategoryResponse(SOAPMessage soapResponse)
+			throws JAXBException, SOAPException {
+		Unmarshaller unmarshaller = JAXBContext.newInstance(FindItemsByCategoryResponse.class).createUnmarshaller();
+		return (FindItemsByCategoryResponse) unmarshaller
+				.unmarshal(soapResponse.getSOAPBody().extractContentAsDocument());
 	}
 
 }
