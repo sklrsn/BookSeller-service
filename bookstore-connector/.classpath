@@ -24,5 +24,6 @@
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/rest-goodreads-client"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ws-ebay-findingservice-client"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/rest-instant-payments-client"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -13,6 +13,7 @@ import org.apache.http.client.ClientProtocolException;
 import com.service.bookstore.response.Article;
 import com.service.bookstore.response.FindItemsByCategoryResponse;
 import com.service.bookstore.response.Item;
+import com.service.instantpayments.payment.ProcessPayments;
 import com.service.rest.goodreads.response.GoodreadsBooksCatalogueResponse;
 import com.service.rest.goodreads.response.Work;
 import com.service.rest.goodreads.retrieve.GoodreadsInfoRetrievalService;
@@ -23,6 +24,7 @@ import com.services.ebay.offers.retrieval.EbayOffersInfoRetrievalServiceImpl;
 public class RetrieveBooksandOffers {
 	private static final GoodreadsInfoRetrievalService goodreadsInfoRetrievalService = new GoodreadsInfoRetrievalServiceImpl();
 	private static final EbayOffersInfoRetrievalService ebayOffersInfoRetrievalService = new EbayOffersInfoRetrievalServiceImpl();
+	private static final ProcessPayments ProcessPayments = new ProcessPayments();
 
 	public List<Article> listbooksAndOffers(String keyword) {
 		GoodreadsBooksCatalogueResponse booksCatalogueResponse = null;
@@ -75,12 +77,44 @@ public class RetrieveBooksandOffers {
 		return articles;
 	}
 
+	public boolean processPayment(String cardNumber, String cardHolderName, int cardSecurityCode, String amount)
+			throws JAXBException, Exception {
+		return ProcessPayments.processPayments(cardNumber, cardHolderName, cardSecurityCode, amount) == 200
+				? Boolean.TRUE : Boolean.FALSE;
+	}
+
 	public static void main(String[] args) {
-		List<Article> articles = new RetrieveBooksandOffers().listbooksAndOffers("Secrets of Mental Math");
-		for (Article article : articles) {
-			System.out.println(article.getTitle());
-			System.out.println(article.getEbayUrl());
-			System.out.println("##########");
+		String cardNumber = "123456789876543212";
+		String cardHolderName = "Kalaiarasan";
+		String amount = "0.0";
+		int cardSecurityCode = 1234;
+
+		RetrieveBooksandOffers retrieveBooksandOffers = new RetrieveBooksandOffers();
+
+		// List Articles and Offers
+		List<Article> articles = retrieveBooksandOffers.listbooksAndOffers("Secrets of Mental Math");
+
+		// for (Article article : articles) {
+		// System.out.println(article.getTitle());
+		// System.out.println(article.getEbayUrl());
+		// System.out.println("##########");
+		// }
+
+		// Select an article and Make payment
+		Article article = articles.get(0);
+		System.out.println("Title :" + article.getTitle());
+		System.out.println("Author:" + article.getAuthors());
+
+		amount = String.valueOf(article.getCurrentPrice());
+
+		try {
+			if (retrieveBooksandOffers.processPayment(cardNumber, cardHolderName, cardSecurityCode, amount)) {
+				System.out.println("## Payment Recieved .... Thanks for the Order");
+			}
+		} catch (JAXBException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}

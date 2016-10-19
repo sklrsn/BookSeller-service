@@ -25,4 +25,16 @@ public class JAXBMarshaller {
 		marshaller.marshal(request, stringWriter);
 		return stringWriter.toString();
 	}
+
+	public static String buildMakePaymentRequest(MakePaymentRequest makePaymentRequest) throws JAXBException {
+
+		JAXBContext jaxbContext = JAXBContext.newInstance(MakePaymentRequest.class);
+
+		Marshaller marshaller = jaxbContext.createMarshaller();
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+		StringWriter stringWriter = new StringWriter();
+		marshaller.marshal(makePaymentRequest, stringWriter);
+		return stringWriter.toString();
+	}
 }
