@@ -2,6 +2,18 @@
     <wb-module deploy-name="BookstoreWeb">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="bookstore-connector.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/bookstore-connector/bookstore-connector">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="rest-goodreads-client.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/rest-goodreads-client/rest-goodreads-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ws-ebay-findingservice-client.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ws-ebay-findingservice-client/ws-ebay-findingservice-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="rest-instant-payments-client.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/rest-instant-payments-client/rest-instant-payments-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="BookstoreWeb"/>
         <property name="java-output-path" value="/BookstoreWeb/build/classes"/>
     </wb-module>

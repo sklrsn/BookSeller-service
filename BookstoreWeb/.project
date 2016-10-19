@@ -3,6 +3,10 @@
 	<name>BookstoreWeb</name>
 	<comment></comment>
 	<projects>
+		<project>bookstore-connector</project>
+		<project>rest-goodreads-client</project>
+		<project>ws-ebay-findingservice-client</project>
+		<project>rest-instant-payments-client</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

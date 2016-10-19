@@ -1,11 +1,17 @@
 package com.bookstore.search;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.service.bookstore.response.Article;
+import com.service.bookstore.web.search.RetrieveBooksandOffers;
 
 /**
  * Servlet implementation class BookStoreSearchServlet
@@ -27,6 +33,9 @@ public class BookStoreSearchServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		RetrieveBooksandOffers retrieveBooksandOffers = new RetrieveBooksandOffers();
+		List<Article> articles = retrieveBooksandOffers.listbooksAndOffers(request.getParameter("keyword"));
+		System.out.println(articles.size());
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
