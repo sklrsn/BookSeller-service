@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.soap.SOAPException;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -15,6 +14,7 @@ import com.service.bookstore.response.FindItemsByCategoryResponse;
 import com.service.bookstore.response.Item;
 import com.service.instantpayments.payment.ProcessPayments;
 import com.service.rest.goodreads.response.GoodreadsBooksCatalogueResponse;
+import com.service.rest.goodreads.response.GoodreadsRetrieveISBNResponse;
 import com.service.rest.goodreads.response.Work;
 import com.service.rest.goodreads.retrieve.GoodreadsInfoRetrievalService;
 import com.service.rest.goodreads.retrieve.GoodreadsInfoRetrievalServiceImpl;
@@ -53,26 +53,45 @@ public class RetrieveBooksandOffers {
 			e.printStackTrace();
 		}
 
-		FindItemsByCategoryResponse findItemsByCategoryResponse = null;
 		try {
-			findItemsByCategoryResponse = ebayOffersInfoRetrievalService.retriveOffersByCategory(keyword);
-		} catch (SOAPException e) {
-			e.printStackTrace();
-		} catch (JAXBException e) {
-			e.printStackTrace();
+			for (Work work : booksCatalogueResponse.getSearch().getResults().getResultList()) {
+				GoodreadsRetrieveISBNResponse goodreadsRetrieveISBNResponse = goodreadsInfoRetrievalService
+						.retrieveBookbyId(String.valueOf(work.getBook().getId()));
+				for (Article article : articles) {
+					if (article.getId().equals(goodreadsRetrieveISBNResponse.getArtifact().getId())) {
+						article.setIsbn(goodreadsRetrieveISBNResponse.getArtifact().getIsbn());
+						article.setIsbn13(goodreadsRetrieveISBNResponse.getArtifact().getIsbn13());
+						article.setDescription(goodreadsRetrieveISBNResponse.getArtifact().getDescription());
+					}
+				}
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		for (Item item : findItemsByCategoryResponse.getSearchResult().getItems()) {
+
+		try {
 			for (Article article : articles) {
-				if (article.getTitle().replaceAll("\\s", "")
-						.contains(item.getTitle().replaceAll("\\.", " ").replaceAll("\\s", ""))) {
-					article.setCurrentPrice(item.getSellingStatus().getCurrentPrice());
-					article.setIsAvailableForPurchase(item.getSellingStatus().getSellingState());
-					article.setShippingServiceCost(item.getShippingInfo().getShippingServiceCost());
-					article.setEbayUrl(item.getViewItemURL());
+				FindItemsByCategoryResponse findItemsByCategoryResponse = ebayOffersInfoRetrievalService
+						.retriveOffersByCategory(article.getIsbn13());
+				if (findItemsByCategoryResponse != null && findItemsByCategoryResponse.getSearchResult() != null
+						&& findItemsByCategoryResponse.getSearchResult().getItems() != null) {
+
+					for (Item item : findItemsByCategoryResponse.getSearchResult().getItems()) {
+						if (article.getTitle().replaceAll("\\s", "")
+								.contains(item.getTitle().replaceAll("\\.", " ").replaceAll("\\s", ""))) {
+							article.setCurrentPrice(item.getSellingStatus().getCurrentPrice());
+							article.setIsAvailableForPurchase(item.getSellingStatus().getSellingState());
+							article.setShippingServiceCost(item.getShippingInfo().getShippingServiceCost());
+							article.setEbayUrl(item.getViewItemURL());
+						}
+					}
+
 				}
 			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return articles;
 	}
@@ -91,7 +110,7 @@ public class RetrieveBooksandOffers {
 
 		RetrieveBooksandOffers retrieveBooksandOffers = new RetrieveBooksandOffers();
 
-		// List Articles and Offers
+		// List Articles and Offers //Secrets of Mental Math
 		List<Article> articles = retrieveBooksandOffers.listbooksAndOffers("Secrets of Mental Math");
 
 		// for (Article article : articles) {
@@ -104,6 +123,9 @@ public class RetrieveBooksandOffers {
 		Article article = articles.get(0);
 		System.out.println("Title :" + article.getTitle());
 		System.out.println("Author:" + article.getAuthors());
+		System.out.println("Isbn:" + article.getIsbn());
+		System.out.println("Isbn:" + article.getIsbn13());
+		System.out.println("Isbn:" + article.getDescription());
 
 		amount = String.valueOf(article.getCurrentPrice());
 

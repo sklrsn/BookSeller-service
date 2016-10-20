@@ -11,7 +11,7 @@
 	<table align="center" bgcolor="#99FFCC" border="1" width="70%">
 		<c:forEach items="${searchResults}" var="searchResult">
 			<tr>
-				<td><img alt="sorry"
+				<td><img alt="image"
 					src="<c:out value="${searchResult.imageUrl}" />"></td>
 				<td><c:out value="${searchResult.title}" /></td>
 				<td><a><c:out value="${searchResult.ebayUrl}" /></a></td>

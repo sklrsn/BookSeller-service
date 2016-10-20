@@ -9,12 +9,46 @@ public class Article {
 	private String averageRating;
 	private String ratingsCount;
 	private String author;
-
+	private String isbn;
+	private String isbn13;
+	private String description;
 	// for ebay
 	private String currentPrice;
 	private String isAvailableForPurchase;
 	private String shippingServiceCost;
 	private String ebayUrl;
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(String isbn) {
+		this.isbn = isbn;
+	}
+
+	public String getIsbn13() {
+		return isbn13;
+	}
+
+	public void setIsbn13(String isbn13) {
+		this.isbn13 = isbn13;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	public String getId() {
 		return id;

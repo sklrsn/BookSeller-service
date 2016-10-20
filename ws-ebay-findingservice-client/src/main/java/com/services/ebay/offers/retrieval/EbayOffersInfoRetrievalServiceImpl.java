@@ -1,5 +1,7 @@
 package com.services.ebay.offers.retrieval;
 
+import java.io.IOException;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -16,6 +18,7 @@ import javax.xml.soap.SOAPPart;
 
 import com.service.bookstore.response.FindItemsByCategoryResponse;
 import com.service.bookstore.response.FindItemsByKeywordsResponse;
+import com.service.bookstore.response.FindItemsByProductResponse;
 
 public class EbayOffersInfoRetrievalServiceImpl implements EbayOffersInfoRetrievalService {
 
@@ -125,6 +128,72 @@ public class EbayOffersInfoRetrievalServiceImpl implements EbayOffersInfoRetriev
 		Unmarshaller unmarshaller = JAXBContext.newInstance(FindItemsByCategoryResponse.class).createUnmarshaller();
 		return (FindItemsByCategoryResponse) unmarshaller
 				.unmarshal(soapResponse.getSOAPBody().extractContentAsDocument());
+	}
+
+	public FindItemsByProductResponse retriveOffersByProductId(String productId) throws SOAPException, JAXBException {
+		SOAPConnection soapConnection = createSOAPConnection();
+		SOAPMessage soapResponse = soapConnection.call(buildRetriveOffersByProductIdRequest(productId), SERVICE_URL);
+		FindItemsByProductResponse findItemsByProductResponse = parseRetriveOffersByProductIdResponse(soapResponse);
+		closeConection(soapConnection);
+		return findItemsByProductResponse;
+	}
+
+	private static SOAPMessage buildRetriveOffersByProductIdRequest(String productId) throws SOAPException {
+		MessageFactory messageFactory = MessageFactory.newInstance();
+		SOAPMessage soapMessage = messageFactory.createMessage();
+		SOAPPart soapPart = soapMessage.getSOAPPart();
+
+		// SOAP Envelope
+		SOAPEnvelope envelope = soapPart.getEnvelope();
+		envelope.addNamespaceDeclaration("xmlns", NAMESPACE);
+
+		// SOAP Body
+		SOAPBody soapBody = envelope.getBody();
+		SOAPElement soapBodyElem = soapBody.addChildElement("findItemsByProductRequest", "");
+		SOAPElement soapBodyElem1 = soapBodyElem.addChildElement("productId","");
+		soapBodyElem1.addTextNode(productId);
+
+		MimeHeaders headers = soapMessage.getMimeHeaders();
+		headers.addHeader(X_EBAY_SOA_OPERATION_NAME, "findItemsByProduct");
+		headers.addHeader(X_EBAY_SOA_SERVICE_VERSION, SERVICE_VERSION);
+		headers.addHeader(X_EBAY_SOA_SECURITY_APPNAME, SECURITY_APPNAME);
+		headers.addHeader(RESPONSE_DATA_FORMAT, DATA_FORMAT);
+		headers.addHeader(X_EBAY_SOA_MESSAGE_PROTOCOL, SOAP12);
+
+		soapMessage.saveChanges();
+
+		try {
+			System.out.print("SOAP Message:");
+			soapMessage.writeTo(System.out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return soapMessage;
+	}
+
+	private FindItemsByProductResponse parseRetriveOffersByProductIdResponse(SOAPMessage soapResponse)
+			throws JAXBException, SOAPException {
+		try {
+			System.out.println();
+			System.out.print("SOAP Message:");
+			soapResponse.writeTo(System.out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Unmarshaller unmarshaller = JAXBContext.newInstance(FindItemsByProductResponse.class).createUnmarshaller();
+		return (FindItemsByProductResponse) unmarshaller
+				.unmarshal(soapResponse.getSOAPBody().extractContentAsDocument());
+	}
+
+	public static void main(String[] args) {
+		try {
+			FindItemsByCategoryResponse findItemsByProductResponse = new EbayOffersInfoRetrievalServiceImpl()
+					.retriveOffersByCategory("9780307338402");
+			System.out.println(findItemsByProductResponse);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
