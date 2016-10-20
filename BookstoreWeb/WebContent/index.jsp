@@ -4,14 +4,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Hello</title>
+<title>BooksHub</title>
 </head>
 <body>
-	<h1>Welcome</h1>
+	<h1>Welcome!!!</h1>
 	<form action="BookStoreSearchServlet" method="post">
 		<table align="center" bgcolor="#99FFCC" border="1" width="70%">
 			<tr>
-				<td colspan="2" align="center">BooksHub</td>
+				<td colspan="2" align="center"><h3>BooksHub</h3></td>
 			</tr>
 			<tr>
 				<td>Search the Books here</td>

@@ -30,4 +30,10 @@ public class InstantPaymentService {
 		makePaymentResponse.setIsProcessed(Boolean.TRUE);
 		return Response.status(Status.OK).entity(makePaymentResponse).build();
 	}
+
+	@GET
+	@Path("/ProcessPayement")
+	public Response processPayement() {
+		return Response.status(Status.OK).entity("Processed!!!!").build();
+	}
 }

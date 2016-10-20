@@ -1,13 +1,11 @@
 package com.service.instantpayments.payment;
 
-import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 
 import org.apache.http.HttpResponse;
-
-import com.rest.service.instantpayment.request.MakePaymentRequest;
-import com.rest.service.instapayment.marshalling.JAXBMarshaller;
-import com.service.instantpayments.utils.Utils;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 public class ProcessPayments {
 	private static final String PAYMENT_SERVICE = "http://localhost:8080/rest-instant-payments/InstantPaymentService";
@@ -15,14 +13,10 @@ public class ProcessPayments {
 	public int processPayments(String cardNumber, String cardHolderName, int cardSecurityCode, String transactionNumber)
 			throws JAXBException, Exception {
 
-		MakePaymentRequest makePaymentRequest = new MakePaymentRequest();
-		makePaymentRequest.setCardHolderName(cardHolderName);
-		makePaymentRequest.setCardNumber(cardNumber);
-		makePaymentRequest.setCardSecurityCode(cardSecurityCode);
-		makePaymentRequest.setTransactionNumber(transactionNumber);
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet(PAYMENT_SERVICE + "/ProcessPayement");
+		HttpResponse response = client.execute(request);
 
-		HttpResponse response = Utils.InvokePostService(PAYMENT_SERVICE, "/MakePayment",
-				JAXBMarshaller.buildMakePaymentRequest(makePaymentRequest), MediaType.APPLICATION_XML);
 		return response.getStatusLine().getStatusCode();
 	}
 

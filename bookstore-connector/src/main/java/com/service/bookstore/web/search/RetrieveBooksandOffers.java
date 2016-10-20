@@ -41,6 +41,13 @@ public class RetrieveBooksandOffers {
 				article.setAverageRating(work.getAverageRating());
 				article.setRatingsCount(String.valueOf(work.getRatingsCount()));
 				article.setAuthors(work.getBook().getAuthor().getName());
+
+				GoodreadsRetrieveISBNResponse goodreadsRetrieveISBNResponse = goodreadsInfoRetrievalService
+						.retrieveBookbyId(String.valueOf(work.getBook().getId()));
+				article.setIsbn(goodreadsRetrieveISBNResponse.getArtifact().getIsbn());
+				article.setIsbn13(goodreadsRetrieveISBNResponse.getArtifact().getIsbn13());
+				article.setDescription(goodreadsRetrieveISBNResponse.getArtifact().getDescription());
+
 				articles.add(article);
 			}
 		} catch (ClientProtocolException e) {
@@ -49,23 +56,6 @@ public class RetrieveBooksandOffers {
 			e.printStackTrace();
 		} catch (JAXBException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			for (Work work : booksCatalogueResponse.getSearch().getResults().getResultList()) {
-				GoodreadsRetrieveISBNResponse goodreadsRetrieveISBNResponse = goodreadsInfoRetrievalService
-						.retrieveBookbyId(String.valueOf(work.getBook().getId()));
-				for (Article article : articles) {
-					if (article.getId().equals(goodreadsRetrieveISBNResponse.getArtifact().getId())) {
-						article.setIsbn(goodreadsRetrieveISBNResponse.getArtifact().getIsbn());
-						article.setIsbn13(goodreadsRetrieveISBNResponse.getArtifact().getIsbn13());
-						article.setDescription(goodreadsRetrieveISBNResponse.getArtifact().getDescription());
-					}
-				}
-			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,6 +83,7 @@ public class RetrieveBooksandOffers {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		return articles;
 	}
 
@@ -124,8 +115,8 @@ public class RetrieveBooksandOffers {
 		System.out.println("Title :" + article.getTitle());
 		System.out.println("Author:" + article.getAuthors());
 		System.out.println("Isbn:" + article.getIsbn());
-		System.out.println("Isbn:" + article.getIsbn13());
-		System.out.println("Isbn:" + article.getDescription());
+		System.out.println("Isbn13:" + article.getIsbn13());
+		System.out.println("Description:" + article.getDescription());
 
 		amount = String.valueOf(article.getCurrentPrice());
 
