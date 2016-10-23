@@ -11,10 +11,10 @@
 	<form action="PaymentProcessingServlet" method="post">
 		<table align="center" bgcolor="#99FFCC" border="1" width="70%">
 			<c:forEach items="${searchResults}" var="searchResult">
-				<c:if test="${searchResult.ebayUrl != null}">
+				<%-- <c:if test="${searchResult.ebayUrl != null}"> --%>
 					<tr>
 						<td><input type="checkbox" value="${searchResult.id}"
-							name="selecteditems" size="10" /></td>
+							name="selecteditems" size="15" /></td>
 						<td><img alt="image"
 							src="<c:out value="${searchResult.imageUrl}" />"></td>
 						<td>
@@ -30,7 +30,7 @@
 							<p>Visit Ebay at : ${searchResult.ebayUrl}</p>
 						</td>
 					</tr>
-				</c:if>
+				<%-- </c:if> --%>
 			</c:forEach>
 		</table>
 		<p>Please fill the below form to purchase the selected book(s)</p>
@@ -43,8 +43,8 @@
 				<td>Security code:<input type="password" name="securitycode"></td>
 			</tr>
 			<tr>
-				<td><p>Select Payment Gateway</p> <input type="radio"
-					name="service" value="defaultservice"> Default Service<br>
+				<td><p>Select Payment Gateway</p> <input type="radio" name="service"
+					value="defaultservice" checked="checked"> Default Service<br>
 					<input type="radio" name="service" value="peerservice">
 					Peer Service <br></td>
 				<td colspan="2" align="center"><input type="submit"

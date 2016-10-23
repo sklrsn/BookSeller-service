@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//src/fi/aalto/t_75_5300/bank/TransactionErrorReason.java=UTF-8
+encoding//src/fi/aalto/t_75_5300/bank/TransactionException.java=UTF-8
+encoding//src/fi/aalto/t_75_5300/bank/TransactionResult.java=UTF-8
+encoding//src/fi/aalto/t_75_5300/bank/TransactionService.java=UTF-8
+encoding//src/fi/aalto/t_75_5300/bank/TransactionServiceLocator.java=UTF-8
+encoding//src/fi/aalto/t_75_5300/bank/TransactionServiceSoapBindingStub.java=UTF-8
+encoding//src/fi/aalto/t_75_5300/bank/Transactions.java=UTF-8
+encoding//src/fi/aalto/t_75_5300/bank/VisaCard.java=UTF-8
+encoding//src/fi/aalto/t_75_5300/bank/VisaTransaction.java=UTF-8

@@ -14,6 +14,9 @@
         <dependent-module archiveName="rest-instant-payments-client.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/rest-instant-payments-client/rest-instant-payments-client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="ws-peer-client.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ws-peer-client/ws-peer-client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="BookstoreWeb"/>
         <property name="java-output-path" value="/BookstoreWeb/build/classes"/>
     </wb-module>

@@ -48,7 +48,26 @@ public class RetrieveBooksandOffers {
 				article.setIsbn13(goodreadsRetrieveISBNResponse.getArtifact().getIsbn13());
 				article.setDescription(goodreadsRetrieveISBNResponse.getArtifact().getDescription());
 
-				articles.add(article);
+				if (!article.getIsbn13().isEmpty()) {
+					FindItemsByCategoryResponse findItemsByCategoryResponse = ebayOffersInfoRetrievalService
+							.retriveOffersByCategory(article.getIsbn13());
+					System.out.println("Retrieving info from ebay:-->" + article.getIsbn13());
+					if (findItemsByCategoryResponse != null && findItemsByCategoryResponse.getSearchResult() != null
+							&& findItemsByCategoryResponse.getSearchResult().getItems() != null) {
+						for (Item item : findItemsByCategoryResponse.getSearchResult().getItems()) {
+							System.out.println("article.getTitle():-->" + article.getTitle());
+							if (article.getTitle().replaceAll("\\s", "")
+									.contains(item.getTitle().replaceAll("\\.", " ").replaceAll("\\s", ""))) {
+								article.setCurrentPrice(item.getSellingStatus().getCurrentPrice());
+								article.setIsAvailableForPurchase(item.getSellingStatus().getSellingState());
+								article.setShippingServiceCost(item.getShippingInfo().getShippingServiceCost());
+								article.setEbayUrl(item.getViewItemURL());
+							}
+						}
+					}
+					articles.add(article);
+				}
+
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -56,30 +75,6 @@ public class RetrieveBooksandOffers {
 			e.printStackTrace();
 		} catch (JAXBException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			for (Article article : articles) {
-				FindItemsByCategoryResponse findItemsByCategoryResponse = ebayOffersInfoRetrievalService
-						.retriveOffersByCategory(article.getIsbn13());
-				if (findItemsByCategoryResponse != null && findItemsByCategoryResponse.getSearchResult() != null
-						&& findItemsByCategoryResponse.getSearchResult().getItems() != null) {
-
-					for (Item item : findItemsByCategoryResponse.getSearchResult().getItems()) {
-						if (article.getTitle().replaceAll("\\s", "")
-								.contains(item.getTitle().replaceAll("\\.", " ").replaceAll("\\s", ""))) {
-							article.setCurrentPrice(item.getSellingStatus().getCurrentPrice());
-							article.setIsAvailableForPurchase(item.getSellingStatus().getSellingState());
-							article.setShippingServiceCost(item.getShippingInfo().getShippingServiceCost());
-							article.setEbayUrl(item.getViewItemURL());
-						}
-					}
-
-				}
-			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -102,7 +97,7 @@ public class RetrieveBooksandOffers {
 		RetrieveBooksandOffers retrieveBooksandOffers = new RetrieveBooksandOffers();
 
 		// List Articles and Offers //Secrets of Mental Math
-		List<Article> articles = retrieveBooksandOffers.listbooksAndOffers("Secrets of Mental Math");
+		List<Article> articles = retrieveBooksandOffers.listbooksAndOffers("Harry Potter and the Goblet of Fire");
 
 		// for (Article article : articles) {
 		// System.out.println(article.getTitle());
@@ -117,6 +112,7 @@ public class RetrieveBooksandOffers {
 		System.out.println("Isbn:" + article.getIsbn());
 		System.out.println("Isbn13:" + article.getIsbn13());
 		System.out.println("Description:" + article.getDescription());
+		System.out.println("Ebay Url" + article.getEbayUrl());
 
 		amount = String.valueOf(article.getCurrentPrice());
 
