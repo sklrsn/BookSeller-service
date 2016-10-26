@@ -80,10 +80,13 @@ public class PaymentProcessingServlet extends HttpServlet {
 					request.getRequestDispatcher("/WEB-INF/failure.jsp").forward(request, response);
 			} else {
 				MakeVisaTransaction MakeVisaTransaction = new MakeVisaTransaction();
-				VisaCard card = new VisaCard(cardholderName, cardNumber, 2016, 8, securityCode);
+				VisaCard card = new VisaCard(cardholderName, cardNumber, 2026, 8, securityCode);
 				VisaTransaction visaTransaction = new VisaTransaction(500, card, cardNumber, "");
-				MakeVisaTransaction.processVisaTransaction(visaTransaction);
-				request.getRequestDispatcher("/WEB-INF/success.jsp").forward(request, response);
+				Boolean isSuccess = MakeVisaTransaction.processVisaTransaction(visaTransaction);
+				if (isSuccess)
+					request.getRequestDispatcher("/WEB-INF/success.jsp").forward(request, response);
+				else
+					request.getRequestDispatcher("/WEB-INF/failure.jsp").forward(request, response);
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();

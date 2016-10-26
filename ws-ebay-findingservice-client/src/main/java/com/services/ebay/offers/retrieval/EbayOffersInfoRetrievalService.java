@@ -11,7 +11,7 @@ public interface EbayOffersInfoRetrievalService {
 
 	FindItemsByKeywordsResponse retriveOffersByKeywords(String title) throws SOAPException, JAXBException;
 
-	FindItemsByCategoryResponse retriveOffersByCategory(String keyword) throws SOAPException, JAXBException;
+	FindItemsByCategoryResponse retriveOffersByISBN(String keyword) throws SOAPException, JAXBException;
 
 	FindItemsByProductResponse retriveOffersByProductId(String productId) throws SOAPException, JAXBException;
 

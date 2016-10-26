@@ -22,7 +22,7 @@ public class TransactionServiceLocator extends org.apache.axis.client.Service im
     }
 
     // Use to get a proxy class for TransactionsPort
-    private java.lang.String TransactionsPort_address = "http://demo.seco.tkk.fi/t755300bank/services/v1/transactions";
+    private java.lang.String TransactionsPort_address = "http://demo.seco.tkk.fi/ws/6/t755300bank/services/v1/transactions";
 
     public java.lang.String getTransactionsPortAddress() {
         return TransactionsPort_address;

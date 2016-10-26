@@ -86,7 +86,7 @@ public class EbayOffersInfoRetrievalServiceImpl implements EbayOffersInfoRetriev
 		return soapConnectionFactory.createConnection();
 	}
 
-	public FindItemsByCategoryResponse retriveOffersByCategory(String keyword) throws SOAPException, JAXBException {
+	public FindItemsByCategoryResponse retriveOffersByISBN(String keyword) throws SOAPException, JAXBException {
 		SOAPConnection soapConnection = createSOAPConnection();
 		SOAPMessage soapResponse = soapConnection.call(buildRetrieveByCategoryRequest(keyword), SERVICE_URL);
 		FindItemsByCategoryResponse findItemsByCategoryResponse = parseRetrieveByCategoryResponse(soapResponse);
@@ -189,7 +189,7 @@ public class EbayOffersInfoRetrievalServiceImpl implements EbayOffersInfoRetriev
 	public static void main(String[] args) {
 		try {
 			FindItemsByCategoryResponse findItemsByProductResponse = new EbayOffersInfoRetrievalServiceImpl()
-					.retriveOffersByCategory("9780307338402");
+					.retriveOffersByISBN("9780307338402");
 			System.out.println(findItemsByProductResponse);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -50,7 +50,7 @@ public class RetrieveBooksandOffers {
 
 				if (!article.getIsbn13().isEmpty()) {
 					FindItemsByCategoryResponse findItemsByCategoryResponse = ebayOffersInfoRetrievalService
-							.retriveOffersByCategory(article.getIsbn13());
+							.retriveOffersByISBN(article.getIsbn13());
 					System.out.println("Retrieving info from ebay:-->" + article.getIsbn13());
 					if (findItemsByCategoryResponse != null && findItemsByCategoryResponse.getSearchResult() != null
 							&& findItemsByCategoryResponse.getSearchResult().getItems() != null) {
